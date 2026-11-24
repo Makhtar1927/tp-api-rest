@@ -1,0 +1,18 @@
+spring:
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/tp_rest}
+    username: ${DB_USERNAME:tp_api}
+    password: ${DB_PASSWORD:makhtarpape}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: false
+
+app:
+  jwt:
+    secret-base64: ${JWT_SECRET_BASE64:hutIK0qav5zFzqzqrmVwK80ca/taJjvqvv0LVWs2pVw=}
+    ttl-seconds: ${JWT_TTL_SECONDS:900}

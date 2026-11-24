@@ -1,0 +1,23 @@
+# Configuration spécifique au profil 'tp'
+# Conforme à la section II.2 et II.3 du sujet
+spring:
+  config:
+    activate:
+      on-profile: tp
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: false
+
+app:
+  jwt:
+    secret-base64: ${JWT_SECRET_BASE64}
+    ttl-seconds: ${JWT_TTL_SECONDS:900}

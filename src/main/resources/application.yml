@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: tp-rest
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:tp}
