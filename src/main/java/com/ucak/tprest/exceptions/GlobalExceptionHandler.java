@@ -49,19 +49,21 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorResponse> handleHttpMessageNotReadable(HttpMessageNotReadableException ex) {
         Throwable cause = ex.getCause();
+        while (cause != null) {
+            // Si la cause est notre ValidationException levée par un désérialiseur strict
+            if (cause instanceof ValidationException valEx) {
+                return handleValidationException(valEx);
+            }
 
-        // Si la cause est notre ValidationException levée par un désérialiseur strict
-        if (cause instanceof ValidationException valEx) {
-            return handleValidationException(valEx);
-        }
-
-        // Cas spécifique d'une énumération invalide (ex: rôle non reconnu)
-        if (cause instanceof InvalidFormatException ife && ife.getTargetType().isEnum()) {
-            Map<String, String> errors = new HashMap<>();
-            String fieldName = ife.getPath().isEmpty() ? "field" : ife.getPath().get(0).getFieldName();
-            errors.put(fieldName, "Valeur non reconnue pour le rôle. Les valeurs valides sont USER ou ADMIN");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ErrorResponse(HttpStatus.BAD_REQUEST.value(), "Données invalides", errors));
+            // Cas spécifique d'une énumération invalide (ex: rôle non reconnu)
+            if (cause instanceof InvalidFormatException ife && ife.getTargetType().isEnum()) {
+                Map<String, String> errors = new HashMap<>();
+                String fieldName = ife.getPath().isEmpty() ? "field" : ife.getPath().get(0).getFieldName();
+                errors.put(fieldName, "Valeur non reconnue pour le rôle. Les valeurs valides sont USER ou ADMIN");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(new ErrorResponse(HttpStatus.BAD_REQUEST.value(), "Données invalides", errors));
+            }
+            cause = cause.getCause();
         }
 
         ErrorResponse response = new ErrorResponse(
