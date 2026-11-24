@@ -50,8 +50,9 @@ public class SecurityConfig {
                 // Endpoints publics d'authentification
                 .requestMatchers("/api/auth/**").permitAll()
 
-                // Documentation OpenAPI / Swagger UI
+                // Documentation OpenAPI / Swagger UI & Racine
                 .requestMatchers(
+                    "/",
                     "/swagger-ui/**",
                     "/swagger-ui.html",
                     "/v3/api-docs/**",
